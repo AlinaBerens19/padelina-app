@@ -1,9 +1,10 @@
-// src/services/firebase.ts
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import * as AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
+import { initializeApp } from "firebase/app";
+import { getReactNativePersistence, initializeAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
+// Извлекаем переменные окружения из app.config.js (или app.json через Constants)
 const {
   FIREBASE_API_KEY,
   FIREBASE_AUTH_DOMAIN,
@@ -14,6 +15,7 @@ const {
   FIREBASE_MEASUREMENT_ID,
 } = Constants.expoConfig?.extra || {};
 
+// Конфигурация Firebase
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
   authDomain: FIREBASE_AUTH_DOMAIN,
@@ -24,6 +26,17 @@ const firebaseConfig = {
   measurementId: FIREBASE_MEASUREMENT_ID,
 };
 
+// Инициализация Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+
+// Инициализация Auth с поддержкой AsyncStorage (персистентность сессии)
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+
+// Инициализация Firestore
+const db = getFirestore(app);
+
+// Экспорт для использования в других частях приложения
+export { app, db };
+

@@ -1,20 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+import AppNavigator from './src/navigation/AppNavigator';
+import { auth } from './src/services/firebase';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [ready, setReady] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  useEffect(() => {
+    const init = async () => {
+      // ждём, пока Firebase Auth инициализируется
+      while (!(auth as any)._initializationPromise) {
+        await new Promise((res) => setTimeout(res, 50));
+      }
+      await (auth as any)._initializationPromise;
+      setReady(true);
+    };
+    init();
+  }, []);
+
+  if (!ready) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Initializing Firebase...</Text>
+      </View>
+    );
+  }
+
+  return <AppNavigator />;
+}

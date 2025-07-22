@@ -35,3 +35,84 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# IDEs
+.idea/
+.vscode/
+# logs
+logs/
+*.log
+# coverage
+coverage/
+# misc
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+*.iml
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.bak
+*.tmp
+*.pid
+*.seed
+*.pid.lock
+
+# Firebase
+firebase-debug.log
+firebase.json
+.firebaserc 
+# Firebase Hosting
+firebase-hosting-logs.json
+firebase-hosting-logs-*.json
+# Firebase Functions
+functions/package-lock.json
+functions/node_modules/
+functions/lib/  
+functions/src/index.js
+functions/src/index.d.ts
+functions/src/index.js.map
+functions/src/package.json
+functions/src/package-lock.json
+functions/src/node_modules/
+# Firebase Firestore
+firestore.indexes.json
+firestore.rules
+# Firebase Storage
+storage.rules
+# Firebase Emulators
+.emulator/
+# Firebase Hosting Cache
+firebase-hosting-cache/
+# Firebase Hosting Config
+firebase-hosting-config.json
+# Firebase Hosting Previews
+firebase-hosting-previews.json
+# Firebase Hosting Previews Cache
+firebase-hosting-previews-cache/
+# Firebase Hosting Previews Config
+firebase-hosting-previews-config.json
+# Firebase Hosting Previews Logs  
+firebase-hosting-previews-logs.json
+# Firebase Hosting Previews Logs Cache
+firebase-hosting-previews-logs-cache/
+# Firebase Hosting Previews Logs Config
+firebase-hosting-previews-logs-config.json
+# Firebase Hosting Previews Logs Index
+firebase-hosting-previews-logs-index.json
+# Firebase Hosting Previews Logs Index Cache
+firebase-hosting-previews-logs-index-cache/ 
+
+.env
+# Environment variables
+.env
+.env.production
+.env.development
+.env.typescript
+.env.test
+.env.local
+.env.staging
+.env.production.local
