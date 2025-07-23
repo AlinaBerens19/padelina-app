@@ -1,6 +1,5 @@
 import { useUserStore } from '../userStore';
 
-
 describe('userStore', () => {
   it('sets and gets AppUser profile correctly', () => {
     const mockProfile = {
