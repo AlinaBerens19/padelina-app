@@ -19,7 +19,7 @@ export default function BottomTabs() {
           else if (route.name === 'Settings') iconName = 'settings'; // <--- добавлено
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#C6FF00',
+        tabBarActiveTintColor: '#1ba158',
         tabBarInactiveTintColor: 'gray',
       })}
     >

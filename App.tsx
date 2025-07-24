@@ -1,7 +1,8 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth/web-extension';
 import { useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import SpinnerOverlay from './src/components/SpinnerOverlay';
 import AppNavigator from './src/navigation/AppNavigator';
 import { auth } from './src/services/firebase';
 import { useAuthStore } from './src/store/authStore';
@@ -14,6 +15,7 @@ export default function App() {
     let unsubscribe: (() => void) | undefined;
 
     const init = async () => {
+      // Ждем инициализации auth
       while (!(auth as any)._initializationPromise) {
         await new Promise((res) => setTimeout(res, 50));
       }
@@ -45,9 +47,13 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'left', 'right', 'bottom']}>
-        <AppNavigator />
-      </SafeAreaView>
+      <View style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'left', 'right', 'bottom']}>
+          <AppNavigator />
+        </SafeAreaView>
+        {/* Глобальный спиннер поверх всех экранов */}
+        <SpinnerOverlay />
+      </View>
     </SafeAreaProvider>
   );
 }

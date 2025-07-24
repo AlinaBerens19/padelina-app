@@ -5,6 +5,7 @@ import { styles } from './SettingsScreen.styles';
 
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, db } from 'services/firebase';
+import { useSpinnerStore } from 'store/spinnerStore';
 
 console.log('serverTimestamp:', serverTimestamp);
 
@@ -17,8 +18,10 @@ const SettingsScreen = () => {
   const [address, setAddress] = useState('');
 
   const handleSave = async () => {
+    const spinner = useSpinnerStore.getState(); // получаем методы show/hide
     console.log('handleSave called');
     try {
+      spinner.show('Сохраняем...');
       const user = auth.currentUser;
       console.log('Current user:', user);
       if (!user) throw new Error('No user is signed in');
@@ -45,8 +48,11 @@ const SettingsScreen = () => {
     } catch (e: any) {
       console.log('Error in handleSave:', e);
       Alert.alert('Error', e.message || 'Could not save profile.');
+    } finally {
+      spinner.hide();
     }
   };
+
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
