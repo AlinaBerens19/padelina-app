@@ -1,6 +1,7 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth/web-extension';
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AppNavigator from './src/navigation/AppNavigator';
 import { auth } from './src/services/firebase';
 import { useAuthStore } from './src/store/authStore';
@@ -10,32 +11,43 @@ export default function App() {
   const setFirebaseUser = useAuthStore((state) => state.setFirebaseUser);
 
   useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+
     const init = async () => {
-      // дождаться инициализации Firebase
       while (!(auth as any)._initializationPromise) {
         await new Promise((res) => setTimeout(res, 50));
       }
       await (auth as any)._initializationPromise;
 
-      const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+      unsubscribe = onAuthStateChanged(getAuth(), (user) => {
         setFirebaseUser(user);
       });
 
       setReady(true);
-
-      return () => unsubscribe(); // отписка при размонтировании
     };
 
     init();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   if (!ready) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Initializing Firebase...</Text>
-      </View>
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} edges={['top', 'left', 'right', 'bottom']}>
+          <Text>Initializing Firebase...</Text>
+        </SafeAreaView>
+      </SafeAreaProvider>
     );
   }
 
-  return <AppNavigator />;
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'left', 'right', 'bottom']}>
+        <AppNavigator />
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
 }

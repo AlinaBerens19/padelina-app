@@ -1,11 +1,18 @@
 import { create } from 'zustand';
 
-type AppUser = {
+export type AppUser = {
   uid: string;
   name: string;
   avatarUrl?: string;
   rating?: number;
-  // другие кастомные поля
+  phone?: string;
+  address?: string;
+  email?: string;
+  level?: number;
+  favouriteSport?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  // любые будущие поля
 };
 
 type UserState = {
