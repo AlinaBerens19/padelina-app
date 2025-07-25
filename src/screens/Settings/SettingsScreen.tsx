@@ -1,16 +1,14 @@
+import firestore from '@react-native-firebase/firestore';
 import React, { useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '../../hooks/useAuth';
+import { useSpinnerStore } from '../../store/spinnerStore';
 import { styles } from './SettingsScreen.styles';
 
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { auth, db } from 'services/firebase';
-import { useSpinnerStore } from 'store/spinnerStore';
-
-console.log('serverTimestamp:', serverTimestamp);
-
 const SettingsScreen = () => {
-  const [name, setName] = useState('');
+  const { user } = useAuth();
+  const [name, setName] = useState(user?.displayName || '');
   const [location, setLocation] = useState('');
   const [level, setLevel] = useState('');
   const [favouriteSport, setFavouriteSport] = useState('');
@@ -18,13 +16,10 @@ const SettingsScreen = () => {
   const [address, setAddress] = useState('');
 
   const handleSave = async () => {
-    const spinner = useSpinnerStore.getState(); // получаем методы show/hide
-    console.log('handleSave called');
+    const spinner = useSpinnerStore.getState();
     try {
-      spinner.show('Сохраняем...');
-      const user = auth.currentUser;
-      console.log('Current user:', user);
-      if (!user) throw new Error('No user is signed in');
+      spinner.show('Saving...');
+      if (!user) throw new Error('User not found');
 
       const profile = {
         uid: user.uid,
@@ -35,24 +30,17 @@ const SettingsScreen = () => {
         phone,
         address,
         email: user.email,
-        updatedAt: serverTimestamp(),
+        updatedAt: firestore.FieldValue.serverTimestamp(),
       };
 
-      console.log('Profile object:', profile);
-
-      await setDoc(doc(db, 'users', user.uid), profile);
-      console.log('setDoc successful');
-
+      await firestore().collection('users').doc(user.uid).set(profile);
       Alert.alert('Saved', 'Your changes have been saved.');
-      console.log('Alert should be shown: Saved');
     } catch (e: any) {
-      console.log('Error in handleSave:', e);
       Alert.alert('Error', e.message || 'Could not save profile.');
     } finally {
       spinner.hide();
     }
   };
-
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
@@ -60,7 +48,7 @@ const SettingsScreen = () => {
         <Text style={styles.header}>Profile Settings</Text>
 
         <Text style={styles.label}>Full Name</Text>
-        <TextInput value={name} onChangeText={setName} style={styles.input} />
+        <TextInput value={name} onChangeText={setName} style={styles.input} autoCapitalize="words" />
 
         <Text style={styles.label}>Location</Text>
         <TextInput value={location} onChangeText={setLocation} style={styles.input} />

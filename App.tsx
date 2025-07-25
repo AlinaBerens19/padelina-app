@@ -1,10 +1,10 @@
-import { getAuth, onAuthStateChanged } from 'firebase/auth/web-extension';
+import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import SpinnerOverlay from './src/components/SpinnerOverlay';
 import AppNavigator from './src/navigation/AppNavigator';
-import { auth } from './src/services/firebase';
+import { auth } from './src/services/firebase/init';
 import { useAuthStore } from './src/store/authStore';
 
 export default function App() {
@@ -12,27 +12,12 @@ export default function App() {
   const setFirebaseUser = useAuthStore((state) => state.setFirebaseUser);
 
   useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
-
-    const init = async () => {
-      // Ждем инициализации auth
-      while (!(auth as any)._initializationPromise) {
-        await new Promise((res) => setTimeout(res, 50));
-      }
-      await (auth as any)._initializationPromise;
-
-      unsubscribe = onAuthStateChanged(getAuth(), (user) => {
-        setFirebaseUser(user);
-      });
-
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setFirebaseUser(user);
       setReady(true);
-    };
+    });
 
-    init();
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
   if (!ready) {
@@ -51,7 +36,6 @@ export default function App() {
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'left', 'right', 'bottom']}>
           <AppNavigator />
         </SafeAreaView>
-        {/* Глобальный спиннер поверх всех экранов */}
         <SpinnerOverlay />
       </View>
     </SafeAreaProvider>
