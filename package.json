@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
