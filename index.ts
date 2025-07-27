@@ -1,8 +1,15 @@
-import { registerRootComponent } from 'expo';
+// index.ts
 
+// 1) Сначала shim — подменяем устаревший AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ReactNative from 'react-native';
+// @ts-ignore: подмешиваем AsyncStorage в React Native core
+;(ReactNative as any).AsyncStorage = AsyncStorage;
+
+// 2) Затем стандартный старт Expo
+import { registerRootComponent } from 'expo';
 import App from './App';
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
+// Регистрируем корневой компонент (AppRegistry инициализируется внутри)
 registerRootComponent(App);
+

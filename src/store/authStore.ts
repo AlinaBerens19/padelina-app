@@ -1,12 +1,13 @@
+// src/store/authStore.ts
 
-import { User } from 'firebase/auth/web-extension';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
 interface AuthState {
-  firebaseUser: User | null;
+  firebaseUser: FirebaseAuthTypes.User | null;
   isAuthenticated: boolean;
-  setFirebaseUser: (user: User | null) => void;
+  setFirebaseUser: (user: FirebaseAuthTypes.User | null) => void;
 }
 
 export const useAuthStore = create<AuthState>()(

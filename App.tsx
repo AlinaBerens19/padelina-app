@@ -1,29 +1,19 @@
-import { onAuthStateChanged } from 'firebase/auth';
-import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+// App.tsx
+
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import SpinnerOverlay from './src/components/SpinnerOverlay';
+import { useAuth } from './src/hooks/useAuth';
 import AppNavigator from './src/navigation/AppNavigator';
-import { auth } from './src/services/firebase/init';
-import { useAuthStore } from './src/store/authStore';
 
 export default function App() {
-  const [ready, setReady] = useState(false);
-  const setFirebaseUser = useAuthStore((state) => state.setFirebaseUser);
+  const { initializing, isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setFirebaseUser(user);
-      setReady(true);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  if (!ready) {
+  if (initializing) {
     return (
       <SafeAreaProvider>
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} edges={['top', 'left', 'right', 'bottom']}>
+        <SafeAreaView style={styles.center}>
           <Text>Initializing Firebase...</Text>
         </SafeAreaView>
       </SafeAreaProvider>
@@ -33,11 +23,20 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <View style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'left', 'right', 'bottom']}>
-          <AppNavigator />
+        <SafeAreaView style={styles.safe}>
+          {isAuthenticated ? (
+            <AppNavigator />
+          ) : (
+            <Text style={styles.center}>Please log in to continue</Text>
+          )}
         </SafeAreaView>
         <SpinnerOverlay />
       </View>
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  center: { flex:1, justifyContent:'center', alignItems:'center', backgroundColor:'#fff' },
+  safe:   { flex:1, backgroundColor:'#fff' },
+});

@@ -4,7 +4,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { RootStackParamList } from '../navigation/types';
-import { auth, db } from '../services/firebase';
+import { auth, db } from 'services/firebase/init';
 
 
 type Props = {

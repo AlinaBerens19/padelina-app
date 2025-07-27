@@ -3,8 +3,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 import React, { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { auth } from 'services/firebase/init';
 import { RootStackParamList } from '../navigation/types';
-import { auth } from '../services/firebase';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
