@@ -34,7 +34,7 @@ export default {
     },
     extra: {
       eas: {
-        projectId: "YOUR_PROJECT_ID" // ← подставим после первой сборки
+        projectId: "e8f5c550-a173-4557-88cc-f7580668bf3f"
       },
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
